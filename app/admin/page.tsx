@@ -10,6 +10,7 @@ export default function AdminPage() {
   const [students, setStudents] = useState([]);
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [classLink, setClassLink] = useState("");
 
   // ------------------------------
   // SECURE LOGIN + COOKIE SESSION
@@ -47,6 +48,7 @@ export default function AdminPage() {
 
       setStudents(s.data || []);
       setPayments(p.data || []);
+      
       setLoading(false);
     }
 
