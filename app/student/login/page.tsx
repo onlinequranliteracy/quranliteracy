@@ -4,6 +4,7 @@ import { useState } from "react";
 
 export default function StudentLogin() {
   const [email, setEmail] = useState("");
+  const [pin, setPin] = useState("");
   const [error, setError] = useState("");
 
   async function login() {
@@ -12,47 +13,46 @@ export default function StudentLogin() {
     const res = await fetch("/api/student/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    }).then((r) => r.json());
+      body: JSON.stringify({ email, pin }),
+    });
 
-    if (res.error) {
-      setError(res.error);
-      return;
+    const data = await res.json();
+
+    if (data.success) {
+      window.location.href = "/student/dashboard";
+    } else {
+      setError("Invalid email or PIN.");
     }
-
-    // Save student ID
-    localStorage.setItem("student_id", res.id);
-
-    // Redirect to dashboard
-    window.location.href = "/student/dashboard";
   }
 
   return (
-    <main className="p-10 max-w-md mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-center text-green-700">
-        Student Login
-      </h1>
+    <main className="p-10 max-w-md mx-auto text-center">
+      <h1 className="text-3xl font-bold text-green-700 mb-6">Student Login</h1>
 
-      <p className="text-gray-600 text-center mb-6">
-        Enter the email you used during enrollment.
-      </p>
+      <p className="text-gray-600 mb-6">Enter your email and PIN.</p>
 
       <input
         type="email"
-        placeholder="example@email.com"
-        value={email}
+        placeholder="Your email"
+        className="w-full border p-3 rounded mb-4"
         onChange={(e) => setEmail(e.target.value)}
-        className="border p-3 rounded w-full mb-4"
+      />
+
+      <input
+        type="password"
+        placeholder="6-digit PIN"
+        className="w-full border p-3 rounded mb-4"
+        onChange={(e) => setPin(e.target.value)}
       />
 
       <button
         onClick={login}
-        className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded w-full"
+        className="w-full bg-green-600 hover:bg-green-700 text-white p-3 rounded"
       >
         Login
       </button>
 
-      {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
+      {error && <p className="text-red-500 mt-4">{error}</p>}
     </main>
   );
 }

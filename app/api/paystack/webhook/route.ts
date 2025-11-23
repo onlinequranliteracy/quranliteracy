@@ -27,25 +27,26 @@ export async function POST(req: Request) {
     const data = event.data;
     const md = data.metadata;
 
-    // save student (NOW WITH NEXT BILLING DATE)
-    const { data: student } = await supabase
-  .from("students")
-  .insert({
-    full_name: md.full_name,
-    email: md.email,
-    phone: md.phone,
-    course: md.course,
-    class_type: md.class_type,
-    days_per_week: md.days,
-    amount: data.amount / 100,
-    payment_reference: data.reference,
-    next_billing_date: new Date(Date.now() + 30 * 86400 * 1000).toISOString(),
-    status: "active",
-    login_pin: Math.floor(100000 + Math.random() * 900000).toString(), // ⭐ NEW
-  })
-  .select()
-  .single();
+    const pin = Math.floor(100000 + Math.random() * 900000).toString();
 
+    // save student
+    const { data: student } = await supabase
+      .from("students")
+      .insert({
+        full_name: md.full_name,
+        email: md.email,
+        phone: md.phone,
+        course: md.course,
+        class_type: md.class_type,
+        days_per_week: md.days,
+        amount: data.amount / 100,
+        payment_reference: data.reference,
+        next_billing_date: new Date(Date.now() + 30 * 86400 * 1000).toISOString(),
+        status: "active",
+        login_pin: pin,
+      })
+      .select()
+      .single();
 
     // save payment record
     await supabase.from("payments").insert({
@@ -56,7 +57,7 @@ export async function POST(req: Request) {
       status: "success",
     });
 
-    // send email
+    // send confirmation email
     await resend.emails.send({
       from: "Quran Literacy <support@quranliteracy.academy>",
       to: md.email,
@@ -66,6 +67,30 @@ export async function POST(req: Request) {
         <p>Thank you for enrolling in Quran Literacy Academy!</p>
         <p>Your next monthly payment will be due in 30 days.</p>
         <p>We will contact you soon to set your lesson schedule.</p>
+      `,
+    });
+
+    // ⭐ send PIN email separately
+    await resend.emails.send({
+      from: "Quran Literacy <support@quranliteracy.academy>",
+      to: md.email,
+      subject: "Your Student Login PIN",
+      html: `
+        <h2>Assalamu Alaikum ${md.full_name},</h2>
+        <p>Your Quran Literacy student portal PIN is:</p>
+        <h1 style="font-size: 32px; color: green;">${pin}</h1>
+        <p>Please keep this safe. You will use this PIN to log in to your student dashboard.</p>
+
+        <br />
+        <p>Student Login Page:</p>
+        <a href="https://quranliteracy.academy/student" 
+           style="color: green; font-weight: bold;">
+          https://quranliteracy.academy/student
+        </a>
+
+        <br /><br />
+        <p>If you need any help, reply to this email.</p>
+        <p>JazakAllahu Khairan,<br/>Quran Literacy Academy</p>
       `,
     });
   }
