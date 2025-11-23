@@ -89,7 +89,7 @@ await resend.emails.send({
     <br/>
 
     <p>You may now log in here:</p>
-    <a href="https://quranliteracy.academy/student" 
+    <a href="https://quranliteracy.academy/student/login" 
        style="padding: 10px 18px; background: #16a34a; color: white; border-radius: 6px; text-decoration: none;">
        Open Student Dashboard
     </a>

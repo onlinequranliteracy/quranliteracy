@@ -9,16 +9,19 @@ const supabase = createClient(
 export async function POST(req: Request) {
   const { email, pin } = await req.json();
 
+  const cleanEmail = email.trim().toLowerCase();
+  const cleanPin = pin.trim();
+
   const { data: student } = await supabase
     .from("students")
     .select("*")
-    .eq("email", email)
-    .eq("login_pin", pin)
+    .ilike("email", cleanEmail) // <-- IGNORE CASE
+    .eq("login_pin", cleanPin)
     .single();
 
   if (!student) {
-    return NextResponse.json({ error: "Invalid email or PIN." });
+    return NextResponse.json({ success: false, error: "Invalid email or PIN." });
   }
 
-  return NextResponse.json({ student });
+  return NextResponse.json({ success: true, student });
 }

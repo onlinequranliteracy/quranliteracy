@@ -21,11 +21,15 @@ export default function StudentLogin() {
 
     const data = await res.json();
 
-    if (data.success) {
-      window.location.href = "/student";
-    } else {
-      setError("Invalid email or PIN.");
-    }
+    if (data.student) {
+  // Save student ID so dashboard knows who is logged in
+  localStorage.setItem("student_id", data.student.id);
+
+  window.location.href = "/student/dashboard";
+} else {
+  setError("Invalid email or PIN.");
+}
+
   }
 
   return (
