@@ -66,40 +66,11 @@ export async function POST(req: Request) {
         <h2>Assalamu Alaikum ${md.full_name},</h2>
         <p>Thank you for enrolling in Quran Literacy Academy!</p>
         <p>Your next monthly payment will be due in 30 days.</p>
-        <p>Your login pin will be sent soon.</p>
+        <p>Kindly send us a message on whatsapp</p>
       `,
     });
 
-    // send email WITH PIN
-await resend.emails.send({
-  from: "Quran Literacy <support@quranliteracy.academy>",
-  to: md.email,
-  subject: "Your Enrollment is Confirmed — Your Login PIN",
-  html: `
-    <h2>Assalamu Alaikum ${md.full_name},</h2>
-    
-    <p>Alhamdulillah, your enrollment at <strong>Quran Literacy Academy</strong> is confirmed!</p>
-
-    <p>Your next monthly payment will be due in <strong>30 days</strong>.</p>
-
-    <h3>Your Student Dashboard Login:</h3>
-    <p><strong>Email:</strong> ${md.email}</p>
-    <p><strong>PIN:</strong> ${student.login_pin}</p>
-
-    <br/>
-
-    <p>You may now log in here:</p>
-    <a href="https://quranliteracy.academy/student/login" 
-       style="padding: 10px 18px; background: #16a34a; color: white; border-radius: 6px; text-decoration: none;">
-       Open Student Dashboard
-    </a>
-
-    <br/><br/>
-    <p>If you have any questions, reply to this email.</p>
-    <p>JazakAllahu Khairan,</p>
-    <p>Quran Literacy Academy</p>
-  `,
-});
+  
 
   }
 
