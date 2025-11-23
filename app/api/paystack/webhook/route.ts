@@ -70,29 +70,37 @@ export async function POST(req: Request) {
       `,
     });
 
-    // ⭐ send PIN email separately
-    await resend.emails.send({
-      from: "Quran Literacy <support@quranliteracy.academy>",
-      to: md.email,
-      subject: "Your Student Login PIN",
-      html: `
-        <h2>Assalamu Alaikum ${md.full_name},</h2>
-        <p>Your Quran Literacy student portal PIN is:</p>
-        <h1 style="font-size: 32px; color: green;">${pin}</h1>
-        <p>Please keep this safe. You will use this PIN to log in to your student dashboard.</p>
+    // send email WITH PIN
+await resend.emails.send({
+  from: "Quran Literacy <support@quranliteracy.academy>",
+  to: md.email,
+  subject: "Your Enrollment is Confirmed — Your Login PIN",
+  html: `
+    <h2>Assalamu Alaikum ${md.full_name},</h2>
+    
+    <p>Alhamdulillah, your enrollment at <strong>Quran Literacy Academy</strong> is confirmed!</p>
 
-        <br />
-        <p>Student Login Page:</p>
-        <a href="https://quranliteracy.academy/student" 
-           style="color: green; font-weight: bold;">
-          https://quranliteracy.academy/student
-        </a>
+    <p>Your next monthly payment will be due in <strong>30 days</strong>.</p>
 
-        <br /><br />
-        <p>If you need any help, reply to this email.</p>
-        <p>JazakAllahu Khairan,<br/>Quran Literacy Academy</p>
-      `,
-    });
+    <h3>Your Student Dashboard Login:</h3>
+    <p><strong>Email:</strong> ${md.email}</p>
+    <p><strong>PIN:</strong> ${student.login_pin}</p>
+
+    <br/>
+
+    <p>You may now log in here:</p>
+    <a href="https://quranliteracy.academy/student" 
+       style="padding: 10px 18px; background: #16a34a; color: white; border-radius: 6px; text-decoration: none;">
+       Open Student Dashboard
+    </a>
+
+    <br/><br/>
+    <p>If you have any questions, reply to this email.</p>
+    <p>JazakAllahu Khairan,</p>
+    <p>Quran Literacy Academy</p>
+  `,
+});
+
   }
 
   return NextResponse.json({ status: "ok" });
