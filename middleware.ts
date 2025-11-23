@@ -1,18 +1,21 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
-  const isAdminRoute = req.nextUrl.pathname.startsWith("/admin");
+  const path = req.nextUrl.pathname;
 
-  // protect admin routes
-  if (isAdminRoute) {
-    const password = req.nextUrl.searchParams.get("password");
+  // Protect ADMIN DASHBOARD ONLY
+  if (path.startsWith("/admin") && path !== "/admin-login") {
+    const password = req.cookies.get("admin-auth")?.value;
 
     if (password !== process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
-      return NextResponse.redirect(
-        new URL("/admin-login", req.url)
-      );
+      return NextResponse.redirect(new URL("/admin-login", req.url));
     }
   }
 
   return NextResponse.next();
 }
+
+export const config = {
+  matcher: ["/admin/:path*"],
+};
