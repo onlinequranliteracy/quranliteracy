@@ -2,19 +2,20 @@
 
 import { useState } from "react";
 
-export default function AdminLoginPage() {
+export default function AdminLogin() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   async function login() {
-    const correct = process.env.NEXT_PUBLIC_ADMIN_PASSWORD?.trim();
-    const entered = password.trim();
+    setError("");
 
-    if (entered === correct) {
-      document.cookie = "admin_auth=1; path=/; max-age=86400;";
+    if (password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
+      // Save session
+      localStorage.setItem("admin-auth", "true");
+
       window.location.href = "/admin";
     } else {
-      setError("Incorrect password");
+      setError("Incorrect password.");
     }
   }
 
@@ -22,14 +23,18 @@ export default function AdminLoginPage() {
     <main className="p-10 max-w-md mx-auto text-center">
       <h1 className="text-3xl font-bold mb-6">Admin Login</h1>
 
-      <input
-        type="password"
-        placeholder="Enter admin password"
-        className="border px-4 py-3 rounded w-full mb-4"
-        onChange={(e) => setPassword(e.target.value)}
-      />
+      <div className="mb-4">
+        <input
+          type="password"
+          placeholder="Enter admin password"
+          className="border px-4 py-3 rounded w-full"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
 
       <button
+        type="button" // 👈 THIS FIXES THE ISSUE
         onClick={login}
         className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded w-full"
       >
