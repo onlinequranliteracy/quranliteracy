@@ -66,7 +66,7 @@ export async function POST(req: Request) {
         <h2>Assalamu Alaikum ${md.full_name},</h2>
         <p>Thank you for enrolling in Quran Literacy Academy!</p>
         <p>Your next monthly payment will be due in 30 days.</p>
-        <p>We will contact you soon to set your lesson schedule.</p>
+        <p>Your login pin will be sent soon.</p>
       `,
     });
 

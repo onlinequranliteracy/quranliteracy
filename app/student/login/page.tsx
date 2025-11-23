@@ -13,13 +13,16 @@ export default function StudentLogin() {
     const res = await fetch("/api/student/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, pin }),
+      body: JSON.stringify({
+        email: email.toLowerCase(),
+        pin,
+      }),
     });
 
     const data = await res.json();
 
     if (data.success) {
-      window.location.href = "/student/dashboard";
+      window.location.href = "/student";
     } else {
       setError("Invalid email or PIN.");
     }
